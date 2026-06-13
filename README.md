@@ -89,13 +89,17 @@ Python 3.10 veya Python 3.11
 ### Yapay Zeka ve Makine Öğrenmesi
 
 **Ultralytics (YOLOv8x)** : Gerçek zamanlı nesne tespiti için kullanılan derin öğrenme modeli. Kamera akışından drone tespiti yapar.
+
 **scikit-learn** : Akustik analiz için `RandomForestClassifier` modeli eğitimi ve tahmin işlemlerinde kullanılır.
+
 **Joblib** : Eğitilmiş ML modellerinin (`.pkl`) diske kaydedilmesi ve yüklenmesi için kullanılır.
 
 ### Ses ve Görüntü İşleme
 
 **Librosa** : Ses sinyallerinden MFCC (Mel-Frequency Cepstral Coefficients) öznitelik çıkarımı için kullanılır.
+
 **OpenCV (cv2)** : Kamera görüntüsü işleme, renk dönüşümleri ve parlaklık analizi için kullanılır.
+
 **NumPy** : Sayısal hesaplamalar, sinyal enerjisi analizi ve matris işlemleri için temel bağımlılıktır.
 
 ### Arayüz
@@ -105,10 +109,15 @@ Python 3.10 veya Python 3.11
 ### Proje Modül Yapısı
 
 **main.py** : Ana kontrol merkezi — Gradio arayüzü ve füzyon karar mekanizması
+
 **yolo_module.py** : YOLOv8x ile optik drone tespiti
+
 **mfcc_module.py** : MFCC öznitelik çıkarımı ve ML tabanlı akustik analiz
+
 **audio_module.py** : Ham ses sinyali ön işleme (enerji hesaplama, örnekleme frekansı)
+
 **camera_module.py** : Kamera görüntüsü ön işleme (çözünürlük, parlaklık analizi)
+
 **train_audio_model.py** : Akustik ML modelini eğitip `drone_audio_model.pkl` olarak kaydeder
 
 ---

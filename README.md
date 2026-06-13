@@ -45,8 +45,8 @@ Uygulama başlatıldığında tarayıcınızda Gradio arayüzü otomatik olarak 
 
 # Kurulum Videosu
 <p align="left">
-  <a href="https://youtube.com">
-    <img src="https://youtube.com" alt="Kurulum Videosu" width="70%">
+  <a href="https://www.youtube.com/watch?v=CaioE9i2KdQm">
+    <img alt="Kurulum Videosu" width="70%">
   </a>
 </p>
 

@@ -20,17 +20,17 @@ else:
 
 def mfcc_analyze(audio):
     if audio is None:
-        return False, "[MFCC] Akış bekleniyor..."
+        return False, "(MFCC) / Akış bekleniyor..."
 
     sample_rate, audio_data = audio
     if audio_data.size == 0:
-        return False, "[MFCC] Boş ses paketi."
+        return False, "(MFCC) / Boş ses paketi."
 
     if len(audio_data.shape) > 1:
         audio_data = np.mean(audio_data, axis=1)
 
     if len(audio_data) < 2048:
-        return False, "[MFCC] Ses verisi analiz için henüz yetersiz uzunlukta..."
+        return False, "(MFCC) / Ses verisi analiz için henüz yetersiz uzunlukta..."
 
     if audio_data.dtype == np.int16:
         audio_data = audio_data.astype(np.float32) / 32768.0
@@ -44,7 +44,7 @@ def mfcc_analyze(audio):
         mfcc_features = np.mean(mfccs, axis=1).reshape(1, -1)
         mfcc_mean_all = np.mean(mfcc_features)
     except Exception as e:
-        return False, f"[MFCC Analiz Hatası]: {str(e)}"
+        return False, f"MFCC Analiz Hatası: {str(e)}"
 
     drone_detected = False
 
@@ -53,7 +53,7 @@ def mfcc_analyze(audio):
             prediction = sound_model.predict(mfcc_features)[0]
             if prediction == 1:
                 drone_detected = True
-                result_status = "🚨 DRONE SESİ FREKANSI ALGILANDI!"
+                result_status = "Drone sesi frekansı algılandı!"
             else:
                 result_status = "Temiz (Çevre Sesi)"
         except:

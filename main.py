@@ -1,8 +1,7 @@
 """
-Real-Time Drone Tespit Sistemi (Gradio 6.0 Uyumlu)
-==================================================
-Kamera ve mikrofondan gelen anlık veri akışlarını
-butonsuz, canlı olarak analiz eden güncel Gradio arayüzü.
+Siber Drone Tespit Sistemi - Ana Kontrol Merkezi
+================================================
+Gradio v6.0 ve Çift Yapay Zeka Modeli (YOLOv8x + Random Forest) Entegre Canlı Akış Sistemi
 """
 
 import gradio as gr
@@ -14,20 +13,17 @@ from mfcc_module import mfcc_analyze
 
 
 # ──────────────────────────────────────────────────────────────
-# Gerçek Zamanlı Tespit Fonksiyonu
+# Gerçek Zamanlı Füzyon Karar Fonksiyonu
 # ──────────────────────────────────────────────────────────────
 
 def realtime_detection(image, audio):
-    """
-    Kamera veya mikrofondan gelen her yeni veride otomatik tetiklenir.
-    """
     camera_output = "Optik veri bekleniyor..."
     audio_output = "Akustik veri bekleniyor..."
 
     drone_by_visual = False
     drone_by_audio = False
 
-    # 1. Canlı Görüntü Analizi
+    # 1. Optik Kanal İşleme (YOLOv8x)
     if image is not None:
         camera_result = process_camera(image)
         yolo_is_drone, yolo_result = yolo_detect(image)
@@ -35,7 +31,7 @@ def realtime_detection(image, audio):
         if yolo_is_drone:
             drone_by_visual = True
 
-    # 2. Canlı Ses Analizi
+    # 2. Akustik Kanal İşleme (MFCC + ML)
     if audio is not None:
         audio_result = process_audio(audio)
         mfcc_is_drone, mfcc_result = mfcc_analyze(audio)
@@ -43,17 +39,17 @@ def realtime_detection(image, audio):
         if mfcc_is_drone:
             drone_by_audio = True
 
-    # 3. Anlık Füzyon Kararı
+    # 3. Ortak Siber Karar Mekanizması
     if drone_by_visual or drone_by_audio:
-        final_output = "ALARM: DRONE TESPİT EDİLDİ!"
+        final_output = " Drone Tespit Edildi!"
     else:
-        final_output = "Tarama Temiz. Tehdit Yok."
+        final_output = "Drone Tespit Edilemedi."
 
-    return camera_output, audio_output, final_output, "Sistem Canlı/Aktif"
+    return camera_output, audio_output, final_output, "Sistem Canlı / Aktif"
 
 
 # ──────────────────────────────────────────────────────────────
-# Gradio Tema ve Stil Ayarları
+# Stil ve Tema Konfigürasyonları
 # ──────────────────────────────────────────────────────────────
 
 dark_theme = gr.themes.Base(
@@ -72,8 +68,8 @@ dark_theme = gr.themes.Base(
 
 css = """
 html, body, .gradio-container { background: #050B1F !important; }
-h1 { color: #fff !important; font-size: 36px !important; font-weight: 700 !important; text-align: center;}
-h3 { color: #8B5CF6 !important; text-align: center; margin-bottom: 20px;}
+h1 { color: #fff !important; font-size: 36px !important; font-weight: 700 !important; }
+h3 { color: #8B5CF6 !important; margin-bottom: 20px;}
 textarea { background: #070E22 !important; color: #e2e8f0 !important; }
 
 #kutu-kamera { border: 2px solid #3B82F6 !important; border-radius: 16px !important; box-shadow: 0 0 15px rgba(59,130,246,.4) !important; }
@@ -87,53 +83,57 @@ textarea { background: #070E22 !important; color: #e2e8f0 !important; }
 """
 
 # ──────────────────────────────────────────────────────────────
-# Arayüz Yapısı (Gradio 6.0 Düzenlemesi)
+# Gradio v6 Arayüz İnşası
 # ──────────────────────────────────────────────────────────────
 
-# theme ve css parametreleri Blocks constructor'ından kaldırıldı
 with gr.Blocks(title="Real-Time Drone Detection") as ui:
-    gr.Markdown("# ️SİBER DRONE TESPİT MERKEZİ")
-    gr.Markdown("### Kesintisiz Optik ve Akustik Spektrum Taraması")
+    # Logo ve Başlık Düzeni
+    with gr.Row():
+        with gr.Column(scale=2, min_width=150):
+            gr.HTML("""
+                <div style="text-align: center; padding: 10px;">
+                    <img src="file=drone_logo.png" style="max-width: 140px; width: 100%; border-radius: 12px; box-shadow: 0 0 15px rgba(139,92,246,0.3);">
+                </div>
+            """)
+        with gr.Column(scale=8):
+            gr.Markdown("<h1 style='text-align: left; margin-top: 15px;'> Drone Tespit Merkezi </h1>")
+            gr.Markdown(
+                "<h3 style='text-align: left; color: #8B5CF6;'>Kesintisiz Optik ve Akustik Spektrum Taraması</h3>")
 
     with gr.Row():
-        # Sol Panel: Girişler
+        # Sol Panel: Girişler (Streaming Modu)
         with gr.Column(scale=5):
             imageinput = gr.Image(
                 sources=["webcam"],
                 type="numpy",
-                label="CANLI KAMERA AKIŞI",
+                label="Canlı Kamera Akışı",
                 elem_id="kutu-kamera",
                 streaming=True
             )
             audioinput = gr.Audio(
                 sources=["microphone"],
                 type="numpy",
-                label="CANLI MİKROFON AKIŞI",
+                label="Canlı Mikrofon Akışı",
                 elem_id="kutu-mikrofon",
                 streaming=True
             )
 
-        # Sağ Panel: Analiz ve karar
+        # Sağ Panel: Sonuçlar ve Füzyon Alanı
         with gr.Column(scale=5):
             system_status = gr.Textbox(
-                value="Sistem Başlatılıyor...",
+                value="Sistem Aktif, Taramalar Sürüyor",
                 label="Sistem Sağlık Durumu",
                 interactive=False,
                 elem_id="kutu-sistem",
             )
 
-            final_box = gr.Textbox(label="FÜZYON KARAR MERKEZİ (ANLIK)", lines=2, elem_id="kutu-sonuc")
+            final_box = gr.Textbox(label="Füzyon Karar Merkezi (Real-Time Anlık)", lines=2, elem_id="kutu-sonuc")
 
             with gr.Row():
-                camera_box = gr.Textbox(label="Optik Rapor (YOLOv8)", lines=6, elem_id="kutu-kamera-analiz")
-                audio_box = gr.Textbox(label="Akustik Rapor (MFCC/ML)", lines=6, elem_id="kutu-ses-analiz")
+                camera_box = gr.Textbox(label="Optik Rapor (YOLOv8x)", lines=6, elem_id="kutu-kamera-analiz")
+                audio_box = gr.Textbox(label="Akustik Rapor (MFCC/ML Model)", lines=6, elem_id="kutu-ses-analiz")
 
-    # ──────────────────────────────────────────────────────────────
-    # GERÇEK ZAMANLI TETİKLEME MEKANİZMASI
-    # ──────────────────────────────────────────────────────────────
-
-    # Hata veren 'every=0.1' kaldırıldı.
-    # Gradio 6'da canlı akışlar (streaming=True) event bazlı olarak otomatik ve verimli yönetilir.
+    # Canlı Tetikleyiciler
     imageinput.change(
         fn=realtime_detection,
         inputs=[imageinput, audioinput],
@@ -147,5 +147,4 @@ with gr.Blocks(title="Real-Time Drone Detection") as ui:
     )
 
 if __name__ == "__main__":
-    # theme ve css parametreleri artık launch() içinde iletiliyor.
-    ui.launch(theme=dark_theme, css=css)
+    ui.launch(theme=dark_theme, css=css, allowed_paths=["."])

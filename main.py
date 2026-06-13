@@ -82,6 +82,10 @@ textarea { background: #070E22 !important; color: #e2e8f0 !important; }
 #kutu-sonuc textarea { color: #FCA5A5 !important; font-weight: bold !important; font-size: 22px !important; text-align: center !important; }
 #kutu-sistem { border: 2px solid #06B6D4 !important; border-radius: 14px !important; }
 #kutu-sistem textarea { color: #67E8F9 !important; font-weight: 600 !important; text-align: center !important; }
+
+#kutu-mikrofon, #kutu-mikrofon * { color: #e2e8f0 !important; }
+#kutu-mikrofon button { background: #1e1b4b !important; border: 1px solid #8B5CF6 !important; color: #e2e8f0 !important; }
+#kutu-mikrofon label { color: #d1d5db !important; }
 """
 
 # ──────────────────────────────────────────────────────────────
@@ -94,7 +98,7 @@ with gr.Blocks(title="Real-Time Drone Detection") as ui:
         with gr.Column(scale=2, min_width=150):
             gr.HTML("""
                 <div style="text-align: center; padding: 10px;">
-                    <img src="file=drone_logo.png" style="max-width: 140px; width: 100%; border-radius: 12px; box-shadow: 0 0 15px rgba(139,92,246,0.3);">
+                    <img src="/gradio_api/file=drone_logo.png" style="max-width: 140px; width: 100%; border-radius: 12px; box-shadow: 0 0 15px rgba(139,92,246,0.3);">
                 </div>
             """)
         with gr.Column(scale=8):

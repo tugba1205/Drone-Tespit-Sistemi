@@ -1,3 +1,8 @@
+'''
+best.pt modelini yüklemediğiniz takdirde program ÇALIŞMAYACAKTIR!
+Detaylar için README.md dosyasını referans alınız.
+'''
+
 import os
 from ultralytics import YOLO
 

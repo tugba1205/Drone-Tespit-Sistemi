@@ -13,8 +13,123 @@ Sistemi yerel bilgisayarınızda (localhost) çalıştırmak için aşağıdaki 
 ### 1. Projeyi Klonlayın veya İndirin
 Öncelikle bu depoyu bilgisayarınıza indirin ve bir kod editöründe (tercihen PyCharm veya VS Code) açın.
 
-### 2. Gerekli Kütüphaneleri Kurun
-Projenizin ihtiyaç duyduğu yapay zeka, ses işleme ve arayüz kütüphanelerini yüklemek için terminali açın ve şu komutu çalıştırın:
+### 2. Sanal Ortam Oluşturun (Önerilen)
+Bağımlılık çakışmalarını önlemek için sanal ortam (virtual environment) kullanmanız önerilir:
 
 ```bash
-pip install ultralytics gradio opencv-python librosa joblib
+python -m venv venv
+```
+
+Sanal ortamı etkinleştirin:
+
+- **Windows:**
+  ```bash
+  venv\Scripts\activate
+  ```
+- **macOS / Linux:**
+  ```bash
+  source venv/bin/activate
+  ```
+
+### 3. Gerekli Kütüphaneleri Kurun
+Projenizin ihtiyaç duyduğu yapay zeka, ses işleme ve arayüz kütüphanelerini yüklemek için terminali açın ve aşağıdaki yöntemlerden birini kullanın:
+
+**Yöntem 1 — `requirements.txt` ile toplu kurulum (önerilen):**
+
+```bash
+pip install -r requirements.txt
+```
+
+**Yöntem 2 — Tek tek kurulum:**
+
+```bash
+pip install gradio numpy opencv-python ultralytics librosa joblib scikit-learn
+```
+
+> **Not:** `requirements.txt` dosyası projenin kök dizininde yer almaktadır ve tüm bağımlılıkları içerir.
+
+### 4. Projeyi Çalıştırın
+Tüm kurulumlar tamamlandıktan sonra uygulamayı başlatmak için:
+
+```bash
+python main.py
+```
+
+Uygulama başlatıldığında tarayıcınızda Gradio arayüzü otomatik olarak açılacaktır. Açılmazsa terminalde görünen `http://localhost:xxxx` adresini tarayıcınıza yapıştırın.
+
+---
+
+# Yazılım Gereksinimleri
+
+## İşletim Sistemi:
+Windows 10/11 (64-bit), macOS (Monterey ve üzeri) veya Linux (Ubuntu 20.04/22.04 LTS).
+
+## Geliştirme Ortamı (IDE):
+PyCharm veya Visual Studio Code
+
+## Önerilen Python Sürümü:
+Python 3.10 veya Python 3.11
+
+# Minimum Donanım Gereksinimleri
+
+**İşlemci (CPU)**: Intel Core i5 veya AMD Ryzen 5 serisi.
+
+**Bellek (RAM)**: 8 GB RAM.
+
+**Ekran Kartı (GPU)**: Paylaşımlı dahili grafik kartı (Intel HD Graphics / AMD Radeon Vega). İşlemler tamamen CPU'ya yüklenir.
+
+**Optik Sensör**: Bilgisayarın dahili entegre web kamerası.
+
+**Akustik Sensör**: Bilgisayarın dahili mikrofonu.
+
+---
+
+## Kullanılan Teknolojiler ve Bağımlılıklar
+
+### Yapay Zeka ve Makine Öğrenmesi
+
+**Ultralytics (YOLOv8x)** : Gerçek zamanlı nesne tespiti için kullanılan derin öğrenme modeli. Kamera akışından drone tespiti yapar.
+**scikit-learn** : Akustik analiz için `RandomForestClassifier` modeli eğitimi ve tahmin işlemlerinde kullanılır.
+**Joblib** : Eğitilmiş ML modellerinin (`.pkl`) diske kaydedilmesi ve yüklenmesi için kullanılır.
+
+### Ses ve Görüntü İşleme
+
+**Librosa** : Ses sinyallerinden MFCC (Mel-Frequency Cepstral Coefficients) öznitelik çıkarımı için kullanılır.
+**OpenCV (cv2)** : Kamera görüntüsü işleme, renk dönüşümleri ve parlaklık analizi için kullanılır.
+**NumPy** : Sayısal hesaplamalar, sinyal enerjisi analizi ve matris işlemleri için temel bağımlılıktır.
+
+### Arayüz
+
+**Gradio (v6)** : Web tabanlı gerçek zamanlı kullanıcı arayüzü. Kamera ve mikrofon streaming desteği sağlar.
+
+### Proje Modül Yapısı
+
+**main.py** : Ana kontrol merkezi — Gradio arayüzü ve füzyon karar mekanizması
+**yolo_module.py** : YOLOv8x ile optik drone tespiti
+**mfcc_module.py** : MFCC öznitelik çıkarımı ve ML tabanlı akustik analiz
+**audio_module.py** : Ham ses sinyali ön işleme (enerji hesaplama, örnekleme frekansı)
+**camera_module.py** : Kamera görüntüsü ön işleme (çözünürlük, parlaklık analizi)
+**train_audio_model.py** : Akustik ML modelini eğitip `drone_audio_model.pkl` olarak kaydeder
+
+---
+
+## Kullanılan Model ve Ağırlıklar (Pre-trained Weights)
+
+Bu projede drone tespiti için YOLOv8x mimarisi üzerine eğitilmiş hazır model ağırlıkları kullanılmıştır. GitHub dosya boyutu sınırlarından dolayı modelin `.pt` dosyası bu depoya (repository) dahil edilmemiştir.
+
+### Model Nasıl Temin Edilir?
+Projeyi yerelinizde çalıştırmadan önce model ağırlıklarını indirmeniz gerekmektedir:
+
+1. Modeli doğrudan [Hugging Face Repository](https://huggingface.co/doguilmak/Drone-Detection-YOLOv8x) üzerinden indirin.
+2. İndirdiğiniz `best.pt` model dosyasını projenin **kök dizinine** (yani `main.py`, `yolo_module.py` gibi dosyaların bulunduğu klasöre) yerleştirin.
+
+---
+
+## Referanslar ve Teşekkür (Acknowledgments & Citations)
+
+Projemizde yer alan nesne algılama (drone tespiti) modülünde, **Doğu İlmak** tarafından geliştirilen veri seti ve eğitilmiş YOLOv8x modeli kullanılmıştır. Geliştiriciye açık kaynak paylaşımları için teşekkür ederiz.
+
+* **Modelin Orijinal GitHub Deposu:** [doguilmak/Drone-Detection-YOLOv8x](https://github.com/doguilmak/Drone-Detection-YOLOv8x)
+* **Modelin Hugging Face Sayfası:** [doguilmak/Drone-Detection-YOLOv8x on Hugging Face](https://huggingface.co/doguilmak/Drone-Detection-YOLOv8x)
+
+---

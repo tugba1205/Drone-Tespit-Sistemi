@@ -11,27 +11,9 @@ Gradio v6 mimarisi üzerine kurulu modern, karanlık siber arayüzü sayesinde t
 Sistemi yerel bilgisayarınızda (localhost) çalıştırmak için aşağıdaki adımları sırasıyla uygulayın:
 
 ### 1. Projeyi Klonlayın veya İndirin
-Öncelikle bu depoyu bilgisayarınıza indirin ve bir kod editöründe (tercihen PyCharm veya VS Code) açın.
+Öncelikle bu depoyu bilgisayarınıza PyCharm üzerinden klonlayın ve açın.
 
-### 2. Sanal Ortam Oluşturun (Önerilen)
-Bağımlılık çakışmalarını önlemek için sanal ortam (virtual environment) kullanmanız önerilir:
-
-```bash
-python -m venv venv
-```
-
-Sanal ortamı etkinleştirin:
-
-- **Windows:**
-  ```bash
-  venv\Scripts\activate
-  ```
-- **macOS / Linux:**
-  ```bash
-  source venv/bin/activate
-  ```
-
-### 3. Gerekli Kütüphaneleri Kurun
+### 3. Gerekli Kütüphaneleri ve Modeli Kurun
 Projenizin ihtiyaç duyduğu yapay zeka, ses işleme ve arayüz kütüphanelerini yüklemek için terminali açın ve aşağıdaki yöntemlerden birini kullanın:
 
 **Yöntem 1 — `requirements.txt` ile toplu kurulum (önerilen):**
@@ -48,12 +30,14 @@ pip install gradio numpy opencv-python ultralytics librosa joblib scikit-learn
 
 > **Not:** `requirements.txt` dosyası projenin kök dizininde yer almaktadır ve tüm bağımlılıkları içerir.
 
+> **ÖNEMLİ:** Projenin çalışması için önemli olan pre-trained açık kaynak `best.pt` modelini [Hugging Face Repository](https://huggingface.co/doguilmak/Drone-Detection-YOLOv8x) bağlantısı üzerinden indirin ve projenize ekleyin. Bunu yapmaz iseniz main.py dosyasının çalıştırılması durumunda FileNotFound hatası alırsınız.
+
 ### 4. Projeyi Çalıştırın
 Tüm kurulumlar tamamlandıktan sonra uygulamayı başlatmak için:
 
-```bash
-python main.py
-```
+> Eğer projeyi kurduktan sonra ilk kez başlatacaksanız `train_audio_model.py` dosyasını çalıştırın ve proje dosyalarınızın içinde `drone_audio_model.psl` scriptinin oluştuğundan emin olun.
+
+> Projenizde `drone_audio_model.psl` varlığından eminseniz, `main.py` dosyasını başlatabilirsiniz.
 
 Uygulama başlatıldığında tarayıcınızda Gradio arayüzü otomatik olarak açılacaktır. Açılmazsa terminalde görünen `http://localhost:xxxx` adresini tarayıcınıza yapıştırın.
 
@@ -68,19 +52,19 @@ Windows 10/11 (64-bit), macOS (Monterey ve üzeri) veya Linux (Ubuntu 20.04/22.0
 PyCharm veya Visual Studio Code
 
 ## Önerilen Python Sürümü:
-Python 3.10 veya Python 3.11
+Python 3.13 veya üstü
 
 # Minimum Donanım Gereksinimleri
 
-**İşlemci (CPU)**: Intel Core i5 veya AMD Ryzen 5 serisi.
+* **İşlemci (CPU)**: Intel Core i5 veya AMD Ryzen 5 serisi.
 
-**Bellek (RAM)**: 8 GB RAM.
+* **Bellek (RAM)**: 8 GB RAM.
 
-**Ekran Kartı (GPU)**: Paylaşımlı dahili grafik kartı (Intel HD Graphics / AMD Radeon Vega). İşlemler tamamen CPU'ya yüklenir.
+* **Ekran Kartı (GPU)**: Paylaşımlı dahili grafik kartı (Intel HD Graphics / AMD Radeon Vega). İşlemler tamamen CPU'ya yüklenir.
 
-**Optik Sensör**: Bilgisayarın dahili entegre web kamerası.
+* **Optik Sensör**: Bilgisayarın dahili entegre web kamerası.
 
-**Akustik Sensör**: Bilgisayarın dahili mikrofonu.
+* **Akustik Sensör**: Bilgisayarın dahili mikrofonu.
 
 ---
 
@@ -88,37 +72,37 @@ Python 3.10 veya Python 3.11
 
 ### Yapay Zeka ve Makine Öğrenmesi
 
-**Ultralytics (YOLOv8x)** : Gerçek zamanlı nesne tespiti için kullanılan derin öğrenme modeli. Kamera akışından drone tespiti yapar.
+* **Ultralytics (YOLOv8x)** : Gerçek zamanlı nesne tespiti için kullanılan derin öğrenme modeli. Kamera akışından drone tespiti yapar.
 
-**scikit-learn** : Akustik analiz için `RandomForestClassifier` modeli eğitimi ve tahmin işlemlerinde kullanılır.
+* **scikit-learn** : Akustik analiz için `RandomForestClassifier` modeli eğitimi ve tahmin işlemlerinde kullanılır.
 
-**Joblib** : Eğitilmiş ML modellerinin (`.pkl`) diske kaydedilmesi ve yüklenmesi için kullanılır.
+* **Joblib** : Eğitilmiş ML modellerinin (`.pkl`) diske kaydedilmesi ve yüklenmesi için kullanılır.
 
 ### Ses ve Görüntü İşleme
 
-**Librosa** : Ses sinyallerinden MFCC (Mel-Frequency Cepstral Coefficients) öznitelik çıkarımı için kullanılır.
+* **Librosa** : Ses sinyallerinden MFCC (Mel-Frequency Cepstral Coefficients) öznitelik çıkarımı için kullanılır.
 
-**OpenCV (cv2)** : Kamera görüntüsü işleme, renk dönüşümleri ve parlaklık analizi için kullanılır.
+* **OpenCV (cv2)** : Kamera görüntüsü işleme, renk dönüşümleri ve parlaklık analizi için kullanılır.
 
-**NumPy** : Sayısal hesaplamalar, sinyal enerjisi analizi ve matris işlemleri için temel bağımlılıktır.
+* **NumPy** : Sayısal hesaplamalar, sinyal enerjisi analizi ve matris işlemleri için temel bağımlılıktır.
 
 ### Arayüz
 
-**Gradio (v6)** : Web tabanlı gerçek zamanlı kullanıcı arayüzü. Kamera ve mikrofon streaming desteği sağlar.
+* **Gradio (v6)** : Web tabanlı gerçek zamanlı kullanıcı arayüzü. Kamera ve mikrofon streaming desteği sağlar.
 
 ### Proje Modül Yapısı
 
-**main.py** : Ana kontrol merkezi — Gradio arayüzü ve füzyon karar mekanizması
+* **main.py** : Ana kontrol merkezi — Gradio arayüzü ve füzyon karar mekanizması
 
-**yolo_module.py** : YOLOv8x ile optik drone tespiti
+* **yolo_module.py** : YOLOv8x ile optik drone tespiti
 
-**mfcc_module.py** : MFCC öznitelik çıkarımı ve ML tabanlı akustik analiz
+* **mfcc_module.py** : MFCC öznitelik çıkarımı ve ML tabanlı akustik analiz
 
-**audio_module.py** : Ham ses sinyali ön işleme (enerji hesaplama, örnekleme frekansı)
+* **audio_module.py** : Ham ses sinyali ön işleme (enerji hesaplama, örnekleme frekansı)
 
-**camera_module.py** : Kamera görüntüsü ön işleme (çözünürlük, parlaklık analizi)
+* **camera_module.py** : Kamera görüntüsü ön işleme (çözünürlük, parlaklık analizi)
 
-**train_audio_model.py** : Akustik ML modelini eğitip `drone_audio_model.pkl` olarak kaydeder
+* **train_audio_model.py** : Akustik ML modelini eğitip `drone_audio_model.pkl` olarak kaydeder
 
 ---
 

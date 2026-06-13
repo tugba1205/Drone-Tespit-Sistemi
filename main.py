@@ -3,7 +3,7 @@ Siber Drone Tespit Sistemi - Ana Kontrol Merkezi
 ================================================
 Gradio v6.0 ve Çift Yapay Zeka Modeli (YOLOv8x + Random Forest) Entegre Canlı Akış Sistemi
 
-Programı çalıştırmak için README.md dosyasını referans alınız!
+PROGRAMI ÇALIŞTIRMAK İÇİN README.md DOSYASINI REFERANS ALINIZ!
 """
 
 import gradio as gr

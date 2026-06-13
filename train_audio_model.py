@@ -23,4 +23,4 @@ model.fit(X, y)
 MODEL_PATH = "drone_audio_model.pkl"
 joblib.dump(model, MODEL_PATH)
 
-print(f"✔️ BAŞARILI: '{MODEL_PATH}' modeli sıfırdan eğitildi ve başarıyla kaydedildi!")
+print(f"BAŞARILI: '{MODEL_PATH}' modeli sıfırdan eğitildi ve başarıyla kaydedildi!")

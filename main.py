@@ -13,78 +13,62 @@ from yolo_module import yolo_detect
 from mfcc_module import mfcc_analyze
 
 
-# ──────────────────────────────────────────────────────────────
-# Ana tespit fonksiyonu
-# ──────────────────────────────────────────────────────────────
-
 def dronedetection(image, audio):
-    """
-    Kamera görüntüsü ve ses verisini analiz ederek drone tespiti yapar.
-    YOLO veya MFCC modüllerinden herhangi biri 'DRONE' döndürürse
-    sistem pozitif sonuç verir.
-    """
     camera_output = "Veri bekleniyor..."
-    audio_output  = "Veri bekleniyor..."
-    results       = []
+    audio_output = "Veri bekleniyor..."
+    drone_detected = False
 
     if image is not None:
-        camera_result  = process_camera(image)
-        yolo_result    = yolo_detect(image)
-        camera_output  = f"{camera_result}\n\n{yolo_result}"
-        results.extend([camera_result, yolo_result])
+        camera_result = process_camera(image)
+        yolo_result = yolo_detect(image)
+        camera_output = f"{camera_result}\n\n{yolo_result}"
+        if "DRONE" in camera_result.upper() or "DRONE" in yolo_result.upper():
+            drone_detected = True
 
     if audio is not None:
-        audio_result  = process_audio(audio)
-        mfcc_result   = mfcc_analyze(audio)
-        audio_output  = f"{audio_result}\n\n{mfcc_result}"
-        results.extend([audio_result, mfcc_result])
+        audio_result = process_audio(audio)
+        mfcc_result = mfcc_analyze(audio)
+        audio_output = f"{audio_result}\n\n{mfcc_result}"
+        if "DRONE" in audio_result.upper() or "DRONE" in mfcc_result.upper():
+            drone_detected = True
 
-    drone_detected = any("DRONE" in r.upper() for r in results)
-    final_output   = "DRONE TESPİT EDİLDİ" if drone_detected else "Drone tespit edilemedi"
+    final_output = "DRONE TESPİT EDİLDİ" if drone_detected else "Drone tespit edilemedi"
 
-    return camera_output, audio_output, final_output, "🟢 Sistem Aktif"
+    return camera_output, audio_output, final_output, "Sistem Aktif"
 
-
-# ──────────────────────────────────────────────────────────────
-# Gradio tema — token'ları koyu arkaplan / sıfır border'a çek
-# ──────────────────────────────────────────────────────────────
 
 dark_theme = gr.themes.Base(
     primary_hue=gr.themes.colors.violet,
     secondary_hue=gr.themes.colors.blue,
     neutral_hue=gr.themes.colors.slate,
 ).set(
-    body_background_fill            = "#050B1F",
-    body_background_fill_dark       = "#050B1F",
-    background_fill_primary         = "#070E22",
-    background_fill_primary_dark    = "#070E22",
-    background_fill_secondary       = "#070E22",
-    background_fill_secondary_dark  = "#070E22",
-    border_color_primary            = "#1a1a2e",
-    border_color_primary_dark       = "#1a1a2e",
-    input_background_fill           = "#070E22",
-    input_background_fill_dark      = "#070E22",
-    input_border_color              = "transparent",
-    input_border_color_dark         = "transparent",
-    input_border_color_focus        = "transparent",
-    input_border_color_focus_dark   = "transparent",
-    block_background_fill           = "#070E22",
-    block_background_fill_dark      = "#070E22",
-    block_border_color              = "transparent",
-    block_border_color_dark         = "transparent",
-    block_border_width              = "0px",
-    block_label_text_color          = "#d1d5db",
-    block_label_text_color_dark     = "#d1d5db",
-    block_title_text_color          = "#ffffff",
-    block_title_text_color_dark     = "#ffffff",
-    block_shadow                    = "none",
-    block_shadow_dark               = "none",
+    body_background_fill="#050B1F",
+    body_background_fill_dark="#050B1F",
+    background_fill_primary="#070E22",
+    background_fill_primary_dark="#070E22",
+    background_fill_secondary="#070E22",
+    background_fill_secondary_dark="#070E22",
+    border_color_primary="#1a1a2e",
+    border_color_primary_dark="#1a1a2e",
+    input_background_fill="#070E22",
+    input_background_fill_dark="#070E22",
+    input_border_color="transparent",
+    input_border_color_dark="transparent",
+    input_border_color_focus="transparent",
+    input_border_color_focus_dark="transparent",
+    block_background_fill="#070E22",
+    block_background_fill_dark="#070E22",
+    block_border_color="transparent",
+    block_border_color_dark="transparent",
+    block_border_width="0px",
+    block_label_text_color="#d1d5db",
+    block_label_text_color_dark="#d1d5db",
+    block_title_text_color="#ffffff",
+    block_title_text_color_dark="#ffffff",
+    block_shadow="none",
+    block_shadow_dark="none",
 )
 
-
-# ──────────────────────────────────────────────────────────────
-# CSS — neon border'lar, karanlık iç alanlar
-# ──────────────────────────────────────────────────────────────
 
 css = """
 html, body, .gradio-container, footer {
@@ -94,12 +78,10 @@ html, body, .gradio-container, footer {
 }
 .gradio-container { max-width: 100% !important; }
 
-/* Yazı renkleri */
 h1 { color: #fff !important; font-size: 42px !important; font-weight: 700 !important; }
 h2, h3 { color: #fff !important; }
 p, label, span, .svelte-1gfkn6j { color: #d1d5db !important; }
 
-/* Genel kutu sıfırlama */
 .block, .form, .wrap, .gap, .row {
     background: transparent !important;
     border: none !important;
@@ -110,7 +92,6 @@ input, textarea {
     color: #e2e8f0 !important;
 }
 
-/* Kamera — mavi neon */
 #kutu-kamera {
     background: #070E22 !important;
     border: 2px solid #3B82F6 !important;
@@ -125,7 +106,6 @@ input, textarea {
 }
 #kutu-kamera canvas { background: #000 !important; }
 
-/* Mikrofon — mor neon */
 #kutu-mikrofon {
     background: #070E22 !important;
     border: 2px solid #8B5CF6 !important;
@@ -145,7 +125,6 @@ input, textarea {
 #kutu-mikrofon label,
 #kutu-mikrofon span { color: #fff !important; fill: #fff !important; }
 
-/* Mikrofon X butonu gizle */
 #kutu-mikrofon button[title="Remove Audio"],
 #kutu-mikrofon button[aria-label="Clear"],
 #kutu-mikrofon button[aria-label="Remove Audio"],
@@ -156,7 +135,6 @@ input, textarea {
 #kutu-mikrofon > div > button[style*="position: absolute"],
 #kutu-mikrofon button.close { display: none !important; }
 
-/* Kamera Analizi — indigo neon */
 #kutu-kamera-analiz {
     background: #070E22 !important;
     border: 2px solid #6366F1 !important;
@@ -171,7 +149,6 @@ input, textarea {
     box-shadow: none !important;
 }
 
-/* Ses Analizi — mor neon */
 #kutu-ses-analiz {
     background: #070E22 !important;
     border: 2px solid #8B5CF6 !important;
@@ -186,7 +163,6 @@ input, textarea {
     box-shadow: none !important;
 }
 
-/* Nihai Sonuç — kırmızı neon */
 #kutu-sonuc {
     background: #070E22 !important;
     border: 2px solid #EF4444 !important;
@@ -201,7 +177,6 @@ input, textarea {
     box-shadow: none !important;
 }
 
-/* Sistem Durumu — cyan neon */
 #kutu-sistem {
     background: #070E22 !important;
     border: 2px solid #06B6D4 !important;
@@ -217,7 +192,6 @@ input, textarea {
     font-weight: 600 !important;
 }
 
-/* Analizi Başlat butonu */
 #btn-analiz {
     background: linear-gradient(90deg, #3B82F6, #8B5CF6, #D946EF) !important;
     color: #fff !important;
@@ -233,22 +207,16 @@ input, textarea {
     box-shadow: 0 0 28px rgba(59,130,246,.7), 0 0 45px rgba(217,70,239,.6) !important;
 }
 
-/* Scrollbar */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: #050B1F; }
 ::-webkit-scrollbar-thumb { background: #8B5CF6; border-radius: 10px; }
 """
 
 
-# ──────────────────────────────────────────────────────────────
-# Arayüz
-# ──────────────────────────────────────────────────────────────
-
 with gr.Blocks(theme=dark_theme, css=css, title="Drone Detection System") as ui:
 
     with gr.Row():
 
-        # Sol panel — sistem durumu
         with gr.Column(scale=1):
             gr.HTML("""
                 <div style="text-align:center; padding:8px 0;">
@@ -256,22 +224,21 @@ with gr.Blocks(theme=dark_theme, css=css, title="Drone Detection System") as ui:
                 </div>
             """)
             system_status = gr.Textbox(
-                value="🟢 Sistem Hazır",
+                value="Sistem Hazir",
                 label="Sistem Durumu",
                 interactive=False,
                 max_lines=1,
                 elem_id="kutu-sistem",
             )
 
-        # Ana panel
         with gr.Column(scale=8):
-            gr.Markdown("# Drone Tespit Sistemi\n### YOLOv8 + MFCC Tabanlı Çoklu Veri Analizi")
+            gr.Markdown("# Drone Tespit Sistemi\n### YOLOv8 + MFCC Tabanli Coklu Veri Analizi")
 
             with gr.Row():
                 imageinput = gr.Image(
                     sources=["webcam"],
                     type="numpy",
-                    label="Kamera Görüntüsü",
+                    label="Kamera Goruntusu",
                     elem_id="kutu-kamera",
                 )
                 audioinput = gr.Audio(
@@ -281,15 +248,15 @@ with gr.Blocks(theme=dark_theme, css=css, title="Drone Detection System") as ui:
                     elem_id="kutu-mikrofon",
                 )
 
-            analyze_button = gr.Button("Analizi Başlat", elem_id="btn-analiz")
+            analyze_button = gr.Button("Analizi Baslat", elem_id="btn-analiz")
 
-            gr.Markdown("## Analiz Sonuçları")
+            gr.Markdown("## Analiz Sonuclari")
 
             with gr.Row():
                 camera_box = gr.Textbox(label="Kamera Analizi", lines=10, elem_id="kutu-kamera-analiz")
-                audio_box  = gr.Textbox(label="Ses Analizi",    lines=10, elem_id="kutu-ses-analiz")
+                audio_box = gr.Textbox(label="Ses Analizi", lines=10, elem_id="kutu-ses-analiz")
 
-            final_box = gr.Textbox(label="Nihai Sonuç", lines=3, elem_id="kutu-sonuc")
+            final_box = gr.Textbox(label="Nihai Sonuc", lines=3, elem_id="kutu-sonuc")
 
     analyze_button.click(
         fn=dronedetection,

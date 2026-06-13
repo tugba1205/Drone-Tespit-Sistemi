@@ -1,0 +1,7 @@
+gradio
+numpy
+opencv-python
+ultralytics
+librosa
+joblib
+scikit-learn

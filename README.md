@@ -221,6 +221,14 @@ komutunu çalıştırın.
 Uygulama başlatıldıktan sonra Gradio arayüzü açılacaktır. Arayüz otomatik açılmazsa terminalde görünen localhost adresini tarayıcıya yapıştırın.
 
 ---
+# Kurulum Videosu
+<p align="left">
+  <a href="https://www.youtube.com/watch?v=CaioE9i2KdQm">
+    <img alt="Kurulum Videosu" width="70%">
+  </a>
+</p>
+
+---
 
 # Sistemin Kullanımı
 

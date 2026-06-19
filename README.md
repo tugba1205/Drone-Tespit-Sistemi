@@ -1,20 +1,117 @@
 # Siber Drone Tespit Sistemi (Real-Time Drone Detection)
 
-Bu proje; kamera ve mikrofondan gelen anlık akışları (streaming) eş zamanlı olarak inceleyen, **YOLOv8x (Optik)** ve **MFCC / Makine Öğrenmesi (Akustik)** tabanlı siber savunma ve drone tespit prototipidir. 
+Bu proje; kamera ve mikrofondan gelen anlık verileri eş zamanlı olarak analiz eden, **YOLOv8x (Optik Analiz)** ve **MFCC + Makine Öğrenmesi (Akustik Analiz)** tabanlı bir drone tespit sistemidir.
 
-Gradio v6 mimarisi üzerine kurulu modern, karanlık siber arayüzü sayesinde tehditleri anlık olarak Füzyon Karar Merkezi'nde raporlar.
+Sistem, görüntü ve ses verilerini ayrı ayrı değerlendirerek elde edilen sonuçları birleştirir ve kullanıcıya gerçek zamanlı olarak sunar. Kullanıcı arayüzü Gradio v6 altyapısı kullanılarak geliştirilmiş olup modern ve kullanıcı dostu bir tasarıma sahiptir.
 
 ---
 
-## Kurulum Adımları
+# Sistem Gereksinimleri
 
-Sistemi yerel bilgisayarınızda (localhost) çalıştırmak için aşağıdaki adımları sırasıyla uygulayın:
+## Minimum Donanım Gereksinimleri
+- Intel Core i5 veya AMD Ryzen 5
+- 8 GB RAM
+- En az 2 GB boş depolama alanı
+- Dahili veya harici webcam
+- Dahili veya harici mikrofon
 
-### 1. Projeyi Klonlayın veya İndirin
-Öncelikle bu depoyu bilgisayarınıza indirin ve bir kod editöründe (tercihen PyCharm veya VS Code) açın.
+## Yazılım Gereksinimleri
+- Windows 10/11 (64-bit) / Ubuntu 20.04+ / macOS Monterey+
+- Python 3.10 veya Python 3.11
+- PyCharm veya Visual Studio Code
 
-### 2. Sanal Ortam Oluşturun (Önerilen)
-Bağımlılık çakışmalarını önlemek için sanal ortam (virtual environment) kullanmanız önerilir:
+---
+
+# Projeyi İndirme
+
+## Yöntem 1: ZIP Olarak İndirme
+1. GitHub proje sayfasını açın.
+2. Sayfanın üst kısmındaki Code butonuna tıklayın.
+3. Download ZIP seçeneğini seçin. 
+4. İndirilen ZIP dosyasını bilgisayarınıza kaydedin.
+5. ZIP dosyasını çıkartın.
+6. Çıkartılan klasörü PyCharm veya Visual Studio Code ile açın.
+
+## Yöntem 2: Git ile Klonlama
+
+Bilgisayarınızda Git kuruluysa projeyi aşağıdaki komut ile klonlayabilirsiniz:
+
+```bash
+git clone https://github.com/tugba1205/Drone-Tespit-Sistemi
+cd Drone-Tespit-Sistemi
+```
+
+---
+
+
+# PyCharm ile Projeyi  Açma
+
+## GitHub Üzerinden Klonlama
+1. PyCharm uygulamasını açın.
+2. Ana ekranda bulunan Get From VCS seçeneğine tıklayın.
+3. GitHub depo bağlantısını ilgili alana yapıştırın.
+4. Projeyi kaydetmek istediğiniz konumu seçin.
+5. Clone butonuna tıklayın.
+6. Proje otomatik olarak açılacaktır.
+
+## ZIP Dosyasından Açma
+1. PyCharm uygulamasını açın.
+2. Open seçeneğine tıklayın.
+3. ZIP dosyasından çıkarttığınız proje klasörünü seçin.
+4. Proje açıldıktan sonra gerekli Python yorumlayıcısını (Interpreter) seçin.
+
+---
+
+# Visual Studio Code ile Açma
+
+## ZIP Dosyasından Açma
+1. Visual Studio Code'u açın.
+2. File > Open Folder menüsünü seçin.
+3. Proje klasörünü seçin.
+4. Terminal açarak kurulum adımlarına devam edin.
+
+## Git ile Klonlama
+
+VS Code terminalinde aşağıdaki komutu çalıştırın:
+
+```bash
+git clone https://github.com/tugba1205/Drone-Tespit-Sistemi
+cd Drone-Tespit-Sistemi
+code .
+```
+
+---
+
+# Python Kurulumu
+
+Bu proje Python programlama dili ile geliştirilmiştir.
+
+Bilgisayarınızda Python kurulu değilse aşağıdaki adımları uygulayın:
+
+1. Python'u resmi web sitesinden indirin.
+2. Kurulum sırasında Add Python to PATH seçeneğini işaretleyin.
+3. Kurulumu tamamlayın.
+
+Kurulumun başarılı olup olmadığını kontrol etmek için terminal açın ve aşağıdaki komutu çalıştırın:
+
+```bash
+python --version
+```
+
+veya
+
+```bash
+py --version
+```
+Ekranda Python sürümü görüntüleniyorsa kurulum başarılıdır.
+
+---
+
+# Kurulum Adımları
+
+## 1. Sanal Ortam Oluşturma (Önerilen)
+
+Bağımlılık çakışmalarını önlemek için sanal ortam oluşturulması önerilir.
 
 ```bash
 python -m venv venv
@@ -22,123 +119,183 @@ python -m venv venv
 
 Sanal ortamı etkinleştirin:
 
-- **Windows:**
-  ```bash
-  venv\Scripts\activate
-  ```
-- **macOS / Linux:**
-  ```bash
-  source venv/bin/activate
-  ```
+Windows:
 
-### 3. Gerekli Kütüphaneleri Kurun
-Projenizin ihtiyaç duyduğu yapay zeka, ses işleme ve arayüz kütüphanelerini yüklemek için terminali açın ve aşağıdaki yöntemlerden birini kullanın:
+```bash
+venv\Scripts\activate
+```
 
-**Yöntem 1 — `requirements.txt` ile toplu kurulum (önerilen):**
+Linux / macOS:
+
+```bash
+source venv/bin/activate
+```
+
+## 2. Gerekli Kütüphaneleri Kurma
+
+Terminali açın. Gerekli Kütüphaneleri indirmek için şu komutu girin:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-**Yöntem 2 — Tek tek kurulum:**
+Alternatif:
 
 ```bash
 pip install gradio numpy opencv-python ultralytics librosa joblib scikit-learn
 ```
 
-> **Not:** `requirements.txt` dosyası projenin kök dizininde yer almaktadır ve tüm bağımlılıkları içerir.
 
-### 4. Projeyi Çalıştırın
-Tüm kurulumlar tamamlandıktan sonra uygulamayı başlatmak için:
+---
+
+# Kullanılan Model ve Ağırlıklar
+
+Bu projede drone tespiti için YOLOv8x modeli kullanılmaktadır.
+
+**Model Nasıl İndirilir?**
+
+1. Aşağıdaki bağlantıyı açın:
+
+https://huggingface.co/doguilmak/Drone-Detection-YOLOv8x
+
+2. Repository içerisinden best.pt dosyasını indirin.
+3. İndirdiğiniz dosyayı proje klasörüne yerleştirin.
+
+**Örnek:**
+
+```text
+Drone-Tespit-Sistemi
+│
+├── main.py
+├── best.pt
+├── yolo_module.py
+```
+
+---
+
+# Proje Klasör Yapısı
+
+```text
+Drone-Tespit-Sistemi
+│
+├── main.py
+├── yolo_module.py
+├── mfcc_module.py
+├── audio_module.py
+├── camera_module.py
+├── train_audio_model.py
+├── best.pt
+├── yolov8n.pt
+├── requirements.txt
+├── drone_logo.png
+└── README.md
+```
+---
+
+# Ses modelinin oluşturulması
+
+İlk kullanım öncesinde aşağıdaki komut çalıştırılmalıdır:
+
+```bash
+python train_audio_model.py
+```
+
+Bu işlem sonucunda **drone_audio_model.pkl** isimli makine öğrenmesi modeli oluşturulur ve proje klasörüne kaydedilir.
+
+---
+
+# Projeyi Çalıştırma
+
+Tüm kurulumlar tamamlandıktan sonra:
 
 ```bash
 python main.py
 ```
+veya 
 
-Uygulama başlatıldığında tarayıcınızda Gradio arayüzü otomatik olarak açılacaktır. Açılmazsa terminalde görünen `http://localhost:xxxx` adresini tarayıcınıza yapıştırın.
+```bash
+py main.py
+```
+komutunu çalıştırın.
 
----
-
-# Yazılım Gereksinimleri
-
-## İşletim Sistemi:
-Windows 10/11 (64-bit), macOS (Monterey ve üzeri) veya Linux (Ubuntu 20.04/22.04 LTS).
-
-## Geliştirme Ortamı (IDE):
-PyCharm veya Visual Studio Code
-
-## Önerilen Python Sürümü:
-Python 3.10 veya Python 3.11
-
-# Minimum Donanım Gereksinimleri
-
-**İşlemci (CPU)**: Intel Core i5 veya AMD Ryzen 5 serisi.
-
-**Bellek (RAM)**: 8 GB RAM.
-
-**Ekran Kartı (GPU)**: Paylaşımlı dahili grafik kartı (Intel HD Graphics / AMD Radeon Vega). İşlemler tamamen CPU'ya yüklenir.
-
-**Optik Sensör**: Bilgisayarın dahili entegre web kamerası.
-
-**Akustik Sensör**: Bilgisayarın dahili mikrofonu.
+Uygulama başlatıldıktan sonra Gradio arayüzü açılacaktır. Arayüz otomatik açılmazsa terminalde görünen localhost adresini tarayıcıya yapıştırın.
 
 ---
 
-## Kullanılan Teknolojiler ve Bağımlılıklar
+# Sistemin Kullanımı
 
-### Yapay Zeka ve Makine Öğrenmesi
+1. Uygulamayı başlatın.
+2. Tarayıcıda Gradio arayüzü açılacaktır.
+3. Kamera erişimine izin verin.
+4. Mikrofon erişimine izin verin.
+5. Sistem gerçek zamanlı görüntü ve ses akışını analiz etmeye başlayacaktır.
+6. Kamera modülü drone nesnelerini tespit eder.
+7. Ses modülü drone seslerini analiz eder.
+8. Elde edilen sonuçlar Füzyon Karar Merkezi tarafından değerlendirilir.
+9. Sonuçlar kullanıcı arayüzünde anlık olarak gösterilir.
+---
 
-**Ultralytics (YOLOv8x)** : Gerçek zamanlı nesne tespiti için kullanılan derin öğrenme modeli. Kamera akışından drone tespiti yapar.
+# Kullanılan Teknolojiler
 
-**scikit-learn** : Akustik analiz için `RandomForestClassifier` modeli eğitimi ve tahmin işlemlerinde kullanılır.
+## Yapay Zeka ve Makine Öğrenmesi
+- Ultralytics YOLOv8x
+- Scikit-Learn
+- Joblib
 
-**Joblib** : Eğitilmiş ML modellerinin (`.pkl`) diske kaydedilmesi ve yüklenmesi için kullanılır.
+## Ses ve Görüntü İşleme
+- Librosa
+- OpenCV
+- NumPy
 
-### Ses ve Görüntü İşleme
-
-**Librosa** : Ses sinyallerinden MFCC (Mel-Frequency Cepstral Coefficients) öznitelik çıkarımı için kullanılır.
-
-**OpenCV (cv2)** : Kamera görüntüsü işleme, renk dönüşümleri ve parlaklık analizi için kullanılır.
-
-**NumPy** : Sayısal hesaplamalar, sinyal enerjisi analizi ve matris işlemleri için temel bağımlılıktır.
-
-### Arayüz
-
-**Gradio (v6)** : Web tabanlı gerçek zamanlı kullanıcı arayüzü. Kamera ve mikrofon streaming desteği sağlar.
-
-### Proje Modül Yapısı
-
-**main.py** : Ana kontrol merkezi — Gradio arayüzü ve füzyon karar mekanizması
-
-**yolo_module.py** : YOLOv8x ile optik drone tespiti
-
-**mfcc_module.py** : MFCC öznitelik çıkarımı ve ML tabanlı akustik analiz
-
-**audio_module.py** : Ham ses sinyali ön işleme (enerji hesaplama, örnekleme frekansı)
-
-**camera_module.py** : Kamera görüntüsü ön işleme (çözünürlük, parlaklık analizi)
-
-**train_audio_model.py** : Akustik ML modelini eğitip `drone_audio_model.pkl` olarak kaydeder
+## Arayüz
+- Gradio v6
 
 ---
 
-## Kullanılan Model ve Ağırlıklar (Pre-trained Weights)
+# Proje Modülleri
 
-Bu projede drone tespiti için YOLOv8x mimarisi üzerine eğitilmiş hazır model ağırlıkları kullanılmıştır. GitHub dosya boyutu sınırlarından dolayı modelin `.pt` dosyası bu depoya (repository) dahil edilmemiştir.
+- **main.py** → Ana kontrol merkezi
+- **yolo_module.py** → Optik drone tespiti
+- **mfcc_module.py** → Akustik analiz
+- **audio_module.py** → Ses ön işleme
+- **camera_module.py** → Görüntü ön işleme
+- **train_audio_model.py** → Akustik model eğitimi
 
-### Model Nasıl Temin Edilir?
-Projeyi yerelinizde çalıştırmadan önce model ağırlıklarını indirmeniz gerekmektedir:
+---
 
-1. Modeli doğrudan [Hugging Face Repository](https://huggingface.co/doguilmak/Drone-Detection-YOLOv8x) üzerinden indirin.
-2. İndirdiğiniz `best.pt` model dosyasını projenin **kök dizinine** (yani `main.py`, `yolo_module.py` gibi dosyaların bulunduğu klasöre) yerleştirin.
+# Sık Karşılaşılan Hatalar
+
+## best.pt bulunamadı
+
+Çözüm: best.pt dosyasını proje klasörüne ekleyin.
+
+## ModuleNotFoundError
+
+```bash
+pip install -r requirements.txt
+```
+komutunu çalıştırın.
+
+## Kamera Açılmıyor
+Tarayıcı izinlerini kontrol edin.
+
+## Mikrofon Açılmıyor
+İşletim sistemi ve tarayıcı izinlerini kontrol edin.
 
 ---
 
-## Referanslar ve Teşekkür (Acknowledgments & Citations)
+# Referanslar ve Teşekkür
 
-Projemizde yer alan nesne algılama (drone tespiti) modülünde, **Doğu İlmak** tarafından geliştirilen veri seti ve eğitilmiş YOLOv8x modeli kullanılmıştır. Geliştiriciye açık kaynak paylaşımları için teşekkür ederiz.
+Drone tespit modülünde kullanılan veri seti ve eğitilmiş YOLOv8x modeli için Doğu İlmak'a teşekkür ederiz.
 
-* **Modelin Orijinal GitHub Deposu:** [doguilmak/Drone-Detection-YOLOv8x](https://github.com/doguilmak/Drone-Detection-YOLOv8x)
-* **Modelin Hugging Face Sayfası:** [doguilmak/Drone-Detection-YOLOv8x on Hugging Face](https://huggingface.co/doguilmak/Drone-Detection-YOLOv8x)
+GitHub:
+https://github.com/doguilmak/Drone-Detection-YOLOv8x
+
+Hugging Face:
+https://huggingface.co/doguilmak/Drone-Detection-YOLOv8x
 
 ---
+
+# Önemli Not
+
+Bu proje eğitim ve araştırma amaçlı geliştirilmiş bir prototiptir. Tespit sonuçları kullanılan modellerin doğruluğuna, görüntü kalitesine, ses kalitesine ve çevresel koşullara bağlı olarak değişiklik gösterebilir. Gerçek güvenlik sistemlerinde kullanılmadan önce kapsamlı testlerden geçirilmesi önerilir.
